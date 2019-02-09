@@ -1,24 +1,24 @@
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+//import javax.servlet.ServletException;
+//import javax.servlet.http.HttpServlet;
+//import javax.servlet.http.HttpServletRequest;
+//import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class MyServlet extends HttpServlet {
+public class MyServlet {
 
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        resp.getWriter().println("Test!");
+    //@Override
+    protected void doGet() throws IOException {
+        //resp.getWriter().println("Test!");
     }
 
-    @Override
+    //@Override
     public void destroy() {
-        super.destroy();
+        //super.destroy();
     }
 
-    @Override
-    public void init() throws ServletException {
-        super.init();
+   // @Override
+    public void init()  {
+        //super.init();
     }
 }
