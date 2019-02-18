@@ -1,11 +1,9 @@
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Date;
 
@@ -20,43 +18,22 @@ public class MyServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        BufferedReader bufferedReader = req.getReader();
-        String line;
-        StringBuffer sb = new StringBuffer();
-        while ((line = bufferedReader.readLine()) != null) {
-            sb.append(line);
-        }
+        ObjectMapper objectMapper = new ObjectMapper();
         Item item = new Item();
-        try {
-            JSONObject jsonObject = new JSONObject(sb.toString());
-            item.setName(jsonObject.getString("name"));
-            item.setDescription(jsonObject.getString("description"));
-            item.setDateCreated(new Date());
-            item.setLastUpdatedDate( new Date());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        item = objectMapper.readValue(req.getInputStream(), item.getClass());
+        item.setDateCreated(new Date());
+        item.setLastUpdatedDate(new Date());
         resp.getWriter().println(itemController.save(item));
     }
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
         Item item = new Item();
-        BufferedReader bufferedReader = req.getReader();
-        String line = null;
-        StringBuffer stringBuffer = new StringBuffer();
-        while ((line = bufferedReader.readLine()) != null) {
-            stringBuffer.append(line);
-        }
-        try {
-            JSONObject jsonObject = new JSONObject(stringBuffer.toString());
-            item = itemController.findById(Long.parseLong(jsonObject.getString("id"))).get(0);
-            item.setName(jsonObject.getString("name"));
-            item.setDescription(jsonObject.getString("description"));
-            item.setLastUpdatedDate( new Date());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        item = objectMapper.readValue(req.getInputStream(), item.getClass());
+        Date dateCreated = itemController.findById(item.getId()).get(0).getDateCreated();
+        item.setDateCreated(dateCreated);
+        item.setLastUpdatedDate(new Date());
         resp.getWriter().println(itemController.update(item));
     }
 
